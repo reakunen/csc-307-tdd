@@ -34,14 +34,10 @@ test('Count unique ticker symbols in the stock portfolio', () => {
 test('Make a stock purchase and update the portfolio', () => {
 	const portfolio = new myFunctions.StockPortfolio()
 
-	// Add initial shares
-	portfolio.addStock('AAPL', 10)
+	portfolio.addStock('LCID', 10)
+	portfolio.makePurchase('LCID', 5)
 
-	// Make a purchase of 5 more shares
-	portfolio.makePurchase('AAPL', 5)
-
-	// Check if the updated shares are correct
-	const updatedShares = portfolio.getShares('AAPL')
+	const updatedShares = portfolio.getShares('LCID')
 
 	expect(updatedShares).toBe(15)
 })
@@ -49,27 +45,19 @@ test('Make a stock purchase and update the portfolio', () => {
 test('Make a stock sale and update the portfolio', () => {
 	const portfolio = new myFunctions.StockPortfolio()
 
-	// Add initial shares
-	portfolio.addStock('AAPL', 10)
+	portfolio.addStock('TSLA', 10) // buy that tesla stock!
+	portfolio.makeSale('TSLA', 5)
 
-	// Make a sale of 5 shares
-	portfolio.makeSale('AAPL', 5)
-
-	// Check if the updated shares are correct
-	const updatedShares = portfolio.getShares('AAPL')
+	const updatedShares = portfolio.getShares('TSLA')
 	expect(updatedShares).toBe(5)
 })
 
 test('Get the number of shares for a given symbol', () => {
 	const portfolio = new myFunctions.StockPortfolio()
 
-	// Add shares for a symbol
 	portfolio.addStock('AAPL', 10)
 
-	// Get the number of shares for "AAPL"
 	const shares = portfolio.getShares('AAPL')
-
-	// Check if the number of shares is correct
 	expect(shares).toBe(10)
 })
 
@@ -78,11 +66,9 @@ test('Portfolio keeps only owned symbols', () => {
 
 	// Add some stocks
 	portfolio.addStock('AAPL', 10)
-	portfolio.addStock('GOOGL', 1) // Adding a stock with zero shares
+	portfolio.addStock('GOOGL', 1)
 
-	// Get the list of owned symbols
 	const ownedSymbols = portfolio.getOwnedSymbols()
-	// Check if the list contains only symbols with at least one stock
 	expect(ownedSymbols).toEqual(['AAPL', 'GOOGL'])
 })
 
@@ -98,7 +84,6 @@ test('Attempt to sell more shares than owned should raise ShareSaleException', (
 		portfolio.makeSale('AAPL', 15)
 	}
 
-	// Check if a ShareSaleException is raised with the correct message
-	expect(() => sellMoreShares()).toThrow(myFunctions.ShareSaleException)
+  expect(() => sellMoreShares()).toThrow(myFunctions.ShareSaleException)
 	expect(() => sellMoreShares()).toThrow('Cannot sell more shares than owned.')
 })
